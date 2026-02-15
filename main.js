@@ -1,32 +1,22 @@
-import LinkedList from './data-structures/linked-list/LinkedList.js';
+import HashMap from './data-structures/hash-map/HashMap.js';
 
-const list = new LinkedList();
+const test = new HashMap();
+test.set('1', 'red');
+test.set('2', 'yellow');
+test.set('3', 'orange');
+test.set('4', 'brown');
+test.set('5', 'gray');
+test.set('6', 'green');
+test.set('7', 'purple');
+test.set('8', 'black');
+test.set('9', 'white');
+test.set('10', 'blue');
+test.set('11', 'pink');
+test.set('12', 'golden');
+test.set('13', 'silver');
+test.set('14', 'black');
+test.set('15', 'white');
+test.set('16', 'sky');
+test.set('17', 'cinnamon');
 
-list.append(1);
-list.append(2);
-list.append(3);
-list.append(4);
-
-console.log(list.toString());
-
-list.prepend(0);
-
-console.log(list.toString());
-
-console.log('List size: ', list.size);
-
-console.log('Index at:', list.at(2));
-
-console.log(list.pop());
-console.log(list.toString());
-
-console.log('Contains 2: ', list.contains(2));
-console.log('Contains 99: ', list.contains(99));
-
-console.log('Index of 2: ', list.findIndex(2));
-console.log('Index of 99: ', list.findIndex(99));
-
-list.prepend(0);
-list.removeAt(4);
-
-console.log(list.toString());
+console.log(test.get('7'));
