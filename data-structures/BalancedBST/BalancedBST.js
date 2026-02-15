@@ -96,7 +96,7 @@ export default class BalancedBST {
 
     q.enqueue(this.root);
     while (!q.isEmpty()) {
-      let currNode = q.dequeue;
+      let currNode = q.dequeue();
       if (currNode.left) {
         q.enqueue(currNode.left);
       }
