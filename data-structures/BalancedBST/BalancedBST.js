@@ -17,7 +17,7 @@ export default class BalancedBST {
    * @param {Array} arr Takes a sorted array and returns the root to a BST
    */
   constructor(arr) {
-    if (arr.length >= 0) this.root = this.buildTree(arr);
+    if (arr.length > 0) this.root = this.buildTree(arr);
   }
 
   buildTree(arr) {
@@ -85,7 +85,7 @@ export default class BalancedBST {
   deleteItem(value) {
     // does nothing if value doesn't exist
     // could make an empty tree
-    if (!value) return;
+    if (value === null || value === undefined) return;
     this.root = this.#deleteItemHelper(this.root, value);
   }
 
@@ -119,9 +119,8 @@ export default class BalancedBST {
     // traverse tree in BFO and call the callback for each value
     // throw error if missing a callback
     if (!callback) throw Error('Missing callback');
-
+    if (this.root === null) return;
     const q = new Queue();
-
     q.enqueue(this.root);
     while (!q.isEmpty()) {
       let currNode = q.dequeue();
@@ -161,23 +160,23 @@ export default class BalancedBST {
     if (root === null) return;
 
     callback(root.data);
-    this.#inOrderForEachHelper(root.left, callback);
-    this.#inOrderForEachHelper(root.right, callback);
+    this.#preOrderForEachHelper(root.left, callback);
+    this.#preOrderForEachHelper(root.right, callback);
   }
 
   postOrderForEach(callback) {
     // traverse tree in DFO and call the callback for each value
     // throw error if missing a callback
     if (!callback) throw Error('Missing callback');
-    this.#postOrderForEachHelper(this.root, helper);
+    this.#postOrderForEachHelper(this.root, callback);
   }
 
   #postOrderForEachHelper(root, callback) {
     if (root === null) return;
 
+    this.#postOrderForEachHelper(root.left, callback);
+    this.#postOrderForEachHelper(root.right, callback);
     callback(root.data);
-    this.#inOrderForEachHelper(root.left, callback);
-    this.#inOrderForEachHelper(root.right, callback);
   }
 
   height(value) {
@@ -240,8 +239,6 @@ export default class BalancedBST {
     }
     return undefined;
   }
-
-  #depthHelper(value, currentDepth) {}
 
   isBalanced() {
     // checks if the tree is balanced
@@ -331,27 +328,15 @@ export default class BalancedBST {
     // find the left midpoint and the right midpoint next and repeat
   }
 
-  #recursiveBuildTree(arr) {
+  #recursiveBuildTree(arr, start = 0, end = arr.length - 1) {
     // recursively builds the BST
     // get midpoint
-    let start = 0;
-    let end = arr.length - 1;
-    let midpoint = Math.floor((end + start) / 2);
-    const root = new Node(arr[midpoint]);
-
-    root.left = this.#recursiveBuildTreeHelper(arr, start, midpoint - 1);
-    root.right = this.#recursiveBuildTreeHelper(arr, midpoint + 1, end);
-
-    return root;
-  }
-
-  #recursiveBuildTreeHelper(arr, start, end) {
     if (start > end) return null;
 
     let midpoint = Math.floor((end + start) / 2);
     const newNode = new Node(arr[midpoint]);
-    newNode.left = this.#recursiveBuildTreeHelper(arr, start, midpoint - 1);
-    newNode.right = this.#recursiveBuildTreeHelper(arr, midpoint + 1, end);
+    newNode.left = this.#recursiveBuildTree(arr, start, midpoint - 1);
+    newNode.right = this.#recursiveBuildTree(arr, midpoint + 1, end);
 
     return newNode;
   }
