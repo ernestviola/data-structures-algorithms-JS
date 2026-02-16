@@ -85,6 +85,7 @@ export default class BalancedBST {
   deleteItem(value) {
     // does nothing if value doesn't exist
     // could make an empty tree
+    if (!value) return;
     this.root = this.#deleteItemHelper(this.root, value);
   }
 
@@ -184,6 +185,35 @@ export default class BalancedBST {
     // Height is defined as the number of edges in the longest path from that
     // node to a leaf node.
     // if not found then return undefined
+
+    let current = this.#findNode(value);
+    if (!current) return undefined;
+
+    let arr = [];
+    let maxHeight = 0;
+    arr.push({
+      node: current,
+      height: 0,
+    });
+
+    while (arr.length > 0) {
+      current = arr.pop();
+      maxHeight = current.height > maxHeight ? current.height : maxHeight;
+      if (current.node.left) {
+        arr.push({
+          node: current.node.left,
+          height: current.height + 1,
+        });
+      }
+
+      if (current.node.right) {
+        arr.push({
+          node: current.node.right,
+          height: current.height + 1,
+        });
+      }
+    }
+    return maxHeight;
   }
 
   depth(value) {
@@ -192,12 +222,52 @@ export default class BalancedBST {
     // the root node.
     // if not found then return undefined
     // stack use preOrder to find the value
-    // once we find the value we can begin returning up from the value adding 1 each time
+    // once we find the value we can begin returning up from the value adding
+    // 1 each time
+    let currentDepth = 0;
+    let currentNode = this.root;
+
+    while (currentNode) {
+      if (currentNode.data === value) {
+        // FOUND IT
+        return currentDepth;
+      } else if (currentNode.data > value) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+      currentDepth++;
+    }
+    return undefined;
   }
+
+  #depthHelper(value, currentDepth) {}
 
   isBalanced() {
     // checks if the tree is balanced
-    // a tree is considered balanced if the height between its left and right subtrees is no more than 1
+    // a tree is considered balanced if the height between its left and right
+    // subtrees is no more than 1
+
+    // check height for left and right if those aren't within 1 of each other
+    // then return false
+    const isBalanced = this.#isBalancedHelper(this.root) !== -1;
+    return isBalanced;
+  }
+
+  #isBalancedHelper(node) {
+    if (node === null) return 0;
+    // depth first search of the root to find the tallest height
+    // count on the way down???
+    // from the root you can begin counting the height
+    let leftHeight = this.#isBalancedHelper(node.left);
+    let rightHeight = this.#isBalancedHelper(node.right);
+
+    if (leftHeight === -1 || rightHeight === -1) return -1;
+
+    if (Math.abs(leftHeight - rightHeight) > 1) {
+      return -1;
+    }
+    return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
   }
 
   rebalance() {
@@ -307,4 +377,19 @@ export default class BalancedBST {
       true,
     );
   };
+
+  #findNode(value) {
+    let current = this.root;
+    while (current) {
+      if (current.data === value) {
+        break;
+      } else if (current.data > value) {
+        current = current.left;
+      } else {
+        current = current.right;
+      }
+    }
+
+    return current;
+  }
 }
