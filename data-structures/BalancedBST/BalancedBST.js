@@ -85,6 +85,33 @@ export default class BalancedBST {
   deleteItem(value) {
     // does nothing if value doesn't exist
     // could make an empty tree
+    this.root = this.#deleteItemHelper(this.root, value);
+  }
+
+  #deleteItemHelper(node, value) {
+    if (node === null) return null;
+
+    if (node.data > value) {
+      node.left = this.#deleteItemHelper(node.left, value);
+    } else if (node.data < value) {
+      node.right = this.#deleteItemHelper(node.right, value);
+    } else {
+      if (node.left === null) return node.right;
+      if (node.right === null) return node.left;
+
+      const successor = this.#getSuccessor(node);
+      node.data = successor.data;
+      node.right = this.#deleteItemHelper(node.right, successor.data);
+    }
+    return node;
+  }
+
+  #getSuccessor(curr) {
+    curr = curr.right;
+    while (curr !== null && curr.left !== null) {
+      curr = curr.left;
+    }
+    return curr;
   }
 
   levelOrderForEach(callback) {

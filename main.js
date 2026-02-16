@@ -8,4 +8,8 @@ bst.levelOrderForEach((val) => {
   console.log(val);
 });
 
+bst.deleteItem(2);
+bst.deleteItem(3);
+bst.deleteItem(1);
+
 bst.prettyPrint();
